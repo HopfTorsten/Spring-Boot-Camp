@@ -41,7 +41,13 @@ public class WifeController {
                 linkTo(ControllerLinkBuilder.methodOn(WifeController.class).getAllWifes())
                 .withSelfRel()
                 .withType(HttpMethod.GET.name());
+
+        Link create = ControllerLinkBuilder.
+                linkTo(ControllerLinkBuilder.methodOn(WifeController.class).create(null))
+                .withSelfRel()
+                .withType(HttpMethod.POST.name());
         linkedWifeResourceList.addLink(self);
+        linkedWifeResourceList.addLink(create);
 
 
         return ResponseEntity.ok(linkedWifeResourceList);
@@ -81,8 +87,14 @@ public class WifeController {
                 .withSelfRel()
                 .withType(HttpMethod.DELETE.name());
 
+        final Link updateLink = ControllerLinkBuilder.
+                linkTo(ControllerLinkBuilder.methodOn(WifeController.class).update(null))
+                .withSelfRel()
+                .withType(HttpMethod.PUT.name());
+
         linkedWife.add(delLink);
         linkedWife.add(selfLink);
+        linkedWife.add(updateLink);
         return linkedWife;
     }
 
