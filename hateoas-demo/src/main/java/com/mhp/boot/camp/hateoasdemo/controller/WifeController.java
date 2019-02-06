@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.LinkedList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/wife")
 public class WifeController {
@@ -25,29 +28,36 @@ public class WifeController {
     }
 
     @GetMapping
-    public ResponseEntity<Iterable<Wife>> getAllWifes() {
-        return ResponseEntity.ok(wifeService.findAllWifes());
+    public ResponseEntity<ResourceList<LinkedWife>> getAllWifes() {
+        final List<LinkedWife> wifes = new LinkedList<>();
+        wifeService.findAllWifes().forEach(w -> wifes.add(map(w)));
+
+        return ResponseEntity.ok(new ResourceList<>(wifes));
     }
 
-    @GetMapping(path="/{id}")
-    public ResponseEntity<Wife> getById(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(wifeService.findWifeById(id));
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<LinkedWife> getById(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(map(wifeService.findWifeById(id)));
     }
 
     @PostMapping
-    public ResponseEntity<Wife> create(@RequestBody Wife wife) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(wifeService.saveOrUpdate(wife));
+    public ResponseEntity<LinkedWife> create(@RequestBody Wife wife) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(map(wifeService.saveOrUpdate(wife)));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Wife> deleteById(@PathVariable("id") Integer id) {
+    public ResponseEntity<LinkedWife> deleteById(@PathVariable("id") Integer id) {
         wifeService.deleteWife(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping
-    public ResponseEntity<Wife> update(@RequestBody Wife wife) {
-        return ResponseEntity.status(HttpStatus.OK).body(wifeService.saveOrUpdate(wife));
+    public ResponseEntity<LinkedWife> update(@RequestBody Wife wife) {
+        return ResponseEntity.status(HttpStatus.OK).body(map(wifeService.saveOrUpdate(wife)));
+    }
+
+    private LinkedWife map(Wife wife) {
+        return new LinkedWife(wife.getId(), wife.getNickName(), wife.getAge(), wife.getBreastSize());
     }
 
 }
