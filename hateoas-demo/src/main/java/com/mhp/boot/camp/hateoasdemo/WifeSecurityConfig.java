@@ -13,7 +13,6 @@ public class WifeSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         http
                 .cors()
                 .and()
@@ -22,6 +21,5 @@ public class WifeSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/*")
                 .permitAll();
-
     }
 }
