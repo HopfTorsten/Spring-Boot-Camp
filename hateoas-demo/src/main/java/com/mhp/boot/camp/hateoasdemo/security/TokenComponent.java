@@ -38,7 +38,7 @@ public class TokenComponent {
                     .getBody();
 
             String userName = body.getSubject();
-            Collection<Map<String, Object>> auths = (Collection<Map<String, Object>>) body.get("ºuthorities");
+            Collection<Map<String, Object>> auths = (Collection<Map<String, Object>>) body.get("authorities");
             final List<SimpleGrantedAuthority> authority = auths.stream().map(m -> m.get("authority").toString()).map(a -> new SimpleGrantedAuthority(a)).collect(Collectors.toList());
 
             return new UsernamePasswordAuthenticationToken(userName, jwt, authority);

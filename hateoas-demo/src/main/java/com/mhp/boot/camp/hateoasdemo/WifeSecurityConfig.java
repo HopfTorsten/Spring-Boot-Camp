@@ -3,6 +3,7 @@ package com.mhp.boot.camp.hateoasdemo;
 import com.mhp.boot.camp.hateoasdemo.repo.User;
 import com.mhp.boot.camp.hateoasdemo.repo.UserRepo;
 import com.mhp.boot.camp.hateoasdemo.security.WifeAuthenticationFilter;
+import com.mhp.boot.camp.hateoasdemo.security.WifeJwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -39,6 +40,7 @@ public class WifeSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                 .authenticated()
                 .and()
-                .addFilterBefore(new WifeAuthenticationFilter("/login", authenticationManager()), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new WifeAuthenticationFilter("/login", authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new WifeJwtFilter(), WifeAuthenticationFilter.class);
     }
 }
