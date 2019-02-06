@@ -1,6 +1,8 @@
 package com.mhp.boot.camp.hateoasdemo.controller;
 
 import com.mhp.boot.camp.hateoasdemo.repo.Wife;
+import com.mhp.boot.camp.hateoasdemo.security.annotations.ReadRight;
+import com.mhp.boot.camp.hateoasdemo.security.annotations.WriteRight;
 import com.mhp.boot.camp.hateoasdemo.service.WifeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -30,6 +32,7 @@ public class WifeController {
         this.wifeService = wifeService;
     }
 
+    @ReadRight
     @GetMapping
     public ResponseEntity<ResourceList<LinkedWife>> getAllWifes() {
         final List<LinkedWife> wifes = new LinkedList<>();
@@ -53,22 +56,26 @@ public class WifeController {
         return ResponseEntity.ok(linkedWifeResourceList);
     }
 
+    @ReadRight
     @GetMapping(path = "/{id}")
     public ResponseEntity<LinkedWife> getById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(map(wifeService.findWifeById(id)));
     }
 
+    @WriteRight
     @PostMapping
     public ResponseEntity<LinkedWife> create(@RequestBody Wife wife) {
         return ResponseEntity.status(HttpStatus.CREATED).body(map(wifeService.saveOrUpdate(wife)));
     }
 
+    @WriteRight
     @DeleteMapping("/{id}")
     public ResponseEntity<LinkedWife> deleteById(@PathVariable("id") Integer id) {
         wifeService.deleteWife(id);
         return ResponseEntity.noContent().build();
     }
 
+    @WriteRight
     @PutMapping
     public ResponseEntity<LinkedWife> update(@RequestBody Wife wife) {
         return ResponseEntity.status(HttpStatus.OK).body(map(wifeService.saveOrUpdate(wife)));
