@@ -27,7 +27,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         String userName = authentication.getPrincipal().toString();
         String password = authentication.getCredentials().toString();
-        //TODO: Check against DB
 
         List<String> roles = userRepo.findById(userName)
                 .filter(e -> e.getPassWord()

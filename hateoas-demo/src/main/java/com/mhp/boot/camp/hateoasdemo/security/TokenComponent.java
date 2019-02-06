@@ -9,7 +9,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,19 +17,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Component
 public class TokenComponent {
 
-    public void addAuthentication(HttpServletResponse response, String name, Collection<? extends GrantedAuthority> roles) {
+    public static void addAuthentication(HttpServletResponse response, String name, Collection<? extends GrantedAuthority> roles) {
 
         JwtBuilder jwtBuilder = Jwts.builder()
                 .setSubject(name)
                 .claim("authorities", roles);
-        String jwt = jwtBuilder.signWith(SignatureAlgorithm.ES256, "Stu213324234234234234234532ofvobsdufbhewobfweuobfr2eopugr032urbn").compact();
+        String jwt = jwtBuilder.signWith(SignatureAlgorithm.HS512, "Stu213324234234234234234532ofvobsdufbhewobfweuobfr2eopugr032urbn").compact();
         response.addHeader("Authorization", "Bearer " + jwt);
     }
 
-    public Authentication getAuthentication(final HttpServletRequest request) {
+    public static Authentication getAuthentication(final HttpServletRequest request) {
         String jwt = request.getHeader("Authorization");
         if (jwt != null) {
             final Claims body = Jwts

@@ -2,12 +2,14 @@ package com.mhp.boot.camp.hateoasdemo;
 
 import com.mhp.boot.camp.hateoasdemo.repo.User;
 import com.mhp.boot.camp.hateoasdemo.repo.UserRepo;
+import com.mhp.boot.camp.hateoasdemo.security.WifeAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
@@ -34,7 +36,9 @@ public class WifeSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers("/*")
-                .permitAll();
+                .anyRequest()
+                .authenticated()
+                .and()
+                .addFilterBefore(new WifeAuthenticationFilter("/login", authenticationManager()), UsernamePasswordAuthenticationFilter.class);
     }
 }

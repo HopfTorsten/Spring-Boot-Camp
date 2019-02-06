@@ -26,7 +26,7 @@ public class User {
     private String passWord;
 
     @Column(name = "ROLE")
-    @Convert
+    @Convert(converter = StringListConverter.class)
     private List<String> roles;
 
 }
