@@ -3,6 +3,9 @@ package com.mhp.boot.camp.hateoasdemo.controller;
 import com.mhp.boot.camp.hateoasdemo.repo.Wife;
 import com.mhp.boot.camp.hateoasdemo.service.WifeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,7 +35,16 @@ public class WifeController {
         final List<LinkedWife> wifes = new LinkedList<>();
         wifeService.findAllWifes().forEach(w -> wifes.add(map(w)));
 
-        return ResponseEntity.ok(new ResourceList<>(wifes));
+        final ResourceList<LinkedWife> linkedWifeResourceList = new ResourceList<>(wifes);
+
+        Link self = ControllerLinkBuilder.
+                linkTo(ControllerLinkBuilder.methodOn(WifeController.class).getAllWifes())
+                .withSelfRel()
+                .withType(HttpMethod.GET.name());
+        linkedWifeResourceList.addLink(self);
+
+
+        return ResponseEntity.ok(linkedWifeResourceList);
     }
 
     @GetMapping(path = "/{id}")
@@ -57,7 +69,21 @@ public class WifeController {
     }
 
     private LinkedWife map(Wife wife) {
-        return new LinkedWife(wife.getId(), wife.getNickName(), wife.getAge(), wife.getBreastSize());
+        final LinkedWife linkedWife = new LinkedWife(wife.getId(), wife.getNickName(), wife.getAge(), wife.getBreastSize());
+        final Link selfLink = ControllerLinkBuilder.
+                linkTo(ControllerLinkBuilder.methodOn(WifeController.class).getById(wife.getId()))
+                .withSelfRel()
+                .withType(HttpMethod.GET.name());
+
+
+        final Link delLink = ControllerLinkBuilder.
+                linkTo(ControllerLinkBuilder.methodOn(WifeController.class).deleteById(wife.getId()))
+                .withSelfRel()
+                .withType(HttpMethod.DELETE.name());
+
+        linkedWife.add(delLink);
+        linkedWife.add(selfLink);
+        return linkedWife;
     }
 
 }
