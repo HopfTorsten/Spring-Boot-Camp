@@ -1,5 +1,7 @@
 package com.mhp.boot.camp.hateoasdemo.security;
 
+import com.mhp.boot.camp.hateoasdemo.repo.UserRepo;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,6 +16,12 @@ import java.util.List;
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 
+    private final UserRepo userRepo;
+
+    public CustomAuthenticationProvider(UserRepo userRepo) {
+        this.userRepo = userRepo;
+    }
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
@@ -21,11 +29,14 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String password = authentication.getCredentials().toString();
         //TODO: Check against DB
 
+        List<String> roles = userRepo.findById(userName)
+                .filter(e -> e.getPassWord()
+                        .equals(password))
+                .map(e -> e.getRoles())
+                .orElseThrow(() -> new AuthenticationCredentialsNotFoundException("Test"));
+
         List<SimpleGrantedAuthority> authorities = new LinkedList<>();
-        authorities.add(new SimpleGrantedAuthority("READ"));
-        if ("admin".equals(userName)) {
-            authorities.add(new SimpleGrantedAuthority("WRITE"));
-        }
+        roles.stream().map(e -> new SimpleGrantedAuthority(e)).forEach(authorities::add);
 
         return new UsernamePasswordAuthenticationToken(userName, password, authorities);
     }
