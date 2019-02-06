@@ -46,8 +46,8 @@ public class WifeController {
                 linkTo(ControllerLinkBuilder.methodOn(WifeController.class).create(null))
                 .withSelfRel()
                 .withType(HttpMethod.POST.name());
-        linkedWifeResourceList.addLink(self);
-        linkedWifeResourceList.addLink(create);
+        linkedWifeResourceList.add(self);
+        linkedWifeResourceList.add(create);
 
 
         return ResponseEntity.ok(linkedWifeResourceList);

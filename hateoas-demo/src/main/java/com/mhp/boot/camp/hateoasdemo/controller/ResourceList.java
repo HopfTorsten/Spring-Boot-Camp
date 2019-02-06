@@ -1,29 +1,20 @@
 package com.mhp.boot.camp.hateoasdemo.controller;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.hateoas.Link;
+import org.springframework.hateoas.ResourceSupport;
 
 import java.util.LinkedList;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class ResourceList<DTO extends Object> {
+public class ResourceList<DTO extends Object> extends ResourceSupport {
 
     private List<DTO> data;
-    @JsonProperty("_links")
-    private List<Link> links = new LinkedList<>();
 
     public ResourceList(List<DTO> data) {
         this.data = data;
-    }
-
-    public void addLink(Link link) {
-        links.add(link);
     }
 
     public void addDataEntry(DTO entry) {
