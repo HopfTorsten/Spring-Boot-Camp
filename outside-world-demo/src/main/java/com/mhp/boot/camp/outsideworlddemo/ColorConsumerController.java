@@ -28,6 +28,11 @@ public class ColorConsumerController {
             case "GREEN":
                 model.addAttribute("color", "#7FFF00");
                 model.addAttribute("status", "AUCH OK");
+                break;
+            case "YELLOW":
+                model.addAttribute("color", "#FF8C00");
+                model.addAttribute("status", "ZU LANGSAM");
+                break;
             default:
                 model.addAttribute("color", "#DC143C");
                 model.addAttribute("status", "KAPUTT");

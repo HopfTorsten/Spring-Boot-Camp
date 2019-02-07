@@ -6,7 +6,6 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
 
 
 @EnableDiscoveryClient
@@ -18,15 +17,16 @@ public class GatewayDemoApplication {
     }
 
     @Bean
-    public RouteLocator gatewayRoutes(RouteLocatorBuilder builder){
+    public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
 
-       return builder.routes()
+        return builder.routes()
                 .route("color",
-                        f->f.path("/color")
-                        .and()
-                        .method(HttpMethod.GET)
+                        r -> r.path("/color")
+                                .filters(fi -> fi.hystrix(
+                                        cfg -> cfg.setName("Schnitzel").setFallbackUri("forward:/fallback"))
+                                )
                                 .uri("lb://boot-camp-color/color"))
-               .build();
+                .build();
 
     }
 
