@@ -23,11 +23,14 @@ public class ColorConsumerController {
         switch (color) {
             case "BLUE":
                 model.addAttribute("color", "#4169E1");
+                model.addAttribute("status", "OK");
                 break;
             case "GREEN":
                 model.addAttribute("color", "#7FFF00");
+                model.addAttribute("status", "AUCH OK");
             default:
                 model.addAttribute("color", "#DC143C");
+                model.addAttribute("status", "KAPUTT");
         }
         return "color";
 
