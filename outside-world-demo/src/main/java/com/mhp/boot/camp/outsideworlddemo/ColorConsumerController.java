@@ -15,7 +15,7 @@ public class ColorConsumerController {
 
         String color;
         try {
-            color = restTemplate.getForObject("http://localhost:8088/color", String.class);
+            color = restTemplate.getForObject("http://localhost:8080/color", String.class);
         } catch (Throwable ex) {
             color = "NOPE";
         }
