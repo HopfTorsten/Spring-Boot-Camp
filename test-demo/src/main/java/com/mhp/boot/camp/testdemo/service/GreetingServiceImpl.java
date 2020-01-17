@@ -20,15 +20,18 @@ public class GreetingServiceImpl implements GreetingService {
 
     @Override
     public List<String> greetMe() {
-        final Person person = randomPersonService.getRandomPerson();
 
-        final String greeting = String.format("Hello! I am %s %s (%s) from %s!",
-                                              person.getName(),
-                                              person.getSurname(),
-                                              person.getGender(),
-                                              person.getRegion());
+        final List<Person> persons = randomPersonService.getRandomPersons((int) (Math.random() * 10) + 1 );
 
-        greetingRepository.save(new Greeting(greeting));
+        final List<String> greetings = persons.stream().map(person -> {
+            return String.format("Hello! I am %s %s (%s) from %s!",
+                          person.getName(),
+                          person.getSurname(),
+                          person.getGender(),
+                          person.getRegion());
+        }).collect(Collectors.toList());
+
+        greetings.forEach(greeting -> greetingRepository.save(new Greeting(greeting)));
 
         return greetingRepository.findAll().stream().map(entity -> entity.getGreetingValue()).collect(Collectors.toList());
     }

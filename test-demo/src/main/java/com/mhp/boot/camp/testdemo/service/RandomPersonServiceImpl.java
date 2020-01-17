@@ -1,6 +1,7 @@
 package com.mhp.boot.camp.testdemo.service;
 
 import com.mhp.boot.camp.testdemo.dto.Person;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -9,12 +10,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 public class RandomPersonServiceImpl implements RandomPersonService {
 
     @Override
-    public Person getRandomPerson() {
+    public List<Person> getRandomPersons(int amount) {
         final RestTemplate restTemplate = new RestTemplate();
         final HttpHeaders headers = new HttpHeaders();
 
@@ -23,7 +26,18 @@ public class RandomPersonServiceImpl implements RandomPersonService {
 
         final HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
 
-        return restTemplate.exchange("https://uinames.com/api/", HttpMethod.GET, entity, Person.class).getBody();
+        if(amount == 1) {
+            Person person = restTemplate.exchange("https://uinames.com/api/",
+                                         HttpMethod.GET,
+                                         entity,
+                                         Person.class).getBody();
 
+            return Collections.singletonList(person);
+        } else {
+            return restTemplate.exchange("https://uinames.com/api/?amount=" + amount,
+                                         HttpMethod.GET,
+                                         entity,
+                                         new ParameterizedTypeReference<List<Person>>() {}).getBody();
+        }
     }
 }
