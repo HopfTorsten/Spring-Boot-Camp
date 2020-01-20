@@ -1,0 +1,7 @@
+<bean id="jdbcConfiguration" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+    <property name="location" value="classpath:com/foo/jdbc-production.properties"/>
+</bean>
+
+<bean id="xmlBean" class="com.mhp.snippetsdemo.XmlBean">
+    <property name="propertiesFactoryBean" ref="jdbcConfiguration"/>
+</bean>
